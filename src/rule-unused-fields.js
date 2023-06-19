@@ -13,7 +13,8 @@ const {
   hasPrecedingEslintDisableComment
 } = require('./utils');
 
-const ESLINT_DISABLE_COMMENT = ' eslint-disable-next-line relay/unused-fields';
+const ESLINT_DISABLE_COMMENT =
+  ' eslint-disable-next-line @productboard/relay/unused-fields';
 
 function getGraphQLFieldNames(graphQLAst) {
   const fieldNames = {};
