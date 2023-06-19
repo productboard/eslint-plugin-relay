@@ -112,7 +112,7 @@ ruleTester.run(
       ',
       `
       graphql\`fragment foo on Page {
-        # eslint-disable-next-line relay/must-colocate-fragment-spreads
+        # eslint-disable-next-line @productboard/relay/must-colocate-fragment-spreads
         ...unused1
       }\`;
       `

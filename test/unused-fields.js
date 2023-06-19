@@ -86,7 +86,7 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     `,
     `
       graphql\`fragment foo on Page {
-        # eslint-disable-next-line relay/unused-fields
+        # eslint-disable-next-line @productboard/relay/unused-fields
         name
       }\`;
     `

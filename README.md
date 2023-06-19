@@ -51,11 +51,11 @@ The following rules support suppression within graphql tags:
 - relay/unused-fields
 - relay/must-colocate-fragment-spreads
 
-Supported rules can be suppressed by adding `# eslint-disable-next-line relay/name-of-rule` to the preceding line:
+Supported rules can be suppressed by adding `# eslint-disable-next-line @productboard/relay/name-of-rule` to the preceding line:
 
 ```js
 graphql`fragment foo on Page {
-  # eslint-disable-next-line relay/must-colocate-fragment-spreads
+  # eslint-disable-next-line @productboard/relay/must-colocate-fragment-spreads
   ...unused1
 }`
 ```

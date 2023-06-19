@@ -61,7 +61,7 @@ const {visit} = require('graphql');
 const utils = require('./utils');
 
 const ESLINT_DISABLE_COMMENT =
-  ' eslint-disable-next-line relay/must-colocate-fragment-spreads';
+  ' eslint-disable-next-line @productboard/relay/must-colocate-fragment-spreads';
 
 function getGraphQLFragmentSpreads(graphQLAst) {
   const fragmentSpreads = {};

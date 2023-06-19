@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.2
+
+- fix inability to use `disable-next-line` comments
+
 ## v1.9.1
 
 - remove `release` Github workflow since this repository does not package the library
