@@ -7,14 +7,18 @@
 
 'use strict';
 
+const DEFAULT_MESSAGE =
+  "Do not use `'%future added value'`. It represents any potential " +
+  'value that the server might return in the future that the code ' +
+  'should handle.';
+
 module.exports = context => {
+  function getCustomMessage() {
+    const options = context.options[0];
+    return options && options.message;
+  }
   function validateValue(node) {
-    context.report(
-      node,
-      "Do not use `'%future added value'`. It represents any potential " +
-        'value that the server might return in the future that the code ' +
-        'should handle.'
-    );
+    context.report(node, getCustomMessage() || DEFAULT_MESSAGE);
   }
   return {
     "Literal[value='%future added value']": validateValue,
