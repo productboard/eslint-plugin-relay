@@ -1,10 +1,11 @@
 {
-  "name": "eslint-plugin-relay",
-  "version": "1.8.3",
+  "name": "@productboard/eslint-plugin-relay",
+  "private": true,
+  "version": "1.9.0",
   "description": "ESLint plugin for Relay.",
   "main": "eslint-plugin-relay",
-  "repository": "relayjs/eslint-plugin-relay",
-  "license": "MIT",
+  "repository": "https://github.com/productboard/eslint-plugin-relay",
+  "license": "UNLICENSED",
   "scripts": {
     "lint": "eslint eslint-plugin-relay.js src",
     "test": "mocha",
