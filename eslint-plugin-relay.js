@@ -22,28 +22,28 @@ module.exports = {
   configs: {
     recommended: {
       rules: {
-        '@kbjz/relay/graphql-syntax': 'error',
-        '@kbjz/relay/compat-uses-vars': 'warn',
-        '@kbjz/relay/graphql-naming': 'error',
-        '@kbjz/relay/generated-flow-types': 'warn',
-        '@kbjz/relay/no-future-added-value': 'warn',
-        '@kbjz/relay/unused-fields': 'warn',
-        '@kbjz/relay/must-colocate-fragment-spreads': 'warn',
-        '@kbjz/relay/function-required-argument': 'warn',
-        '@kbjz/relay/hook-required-argument': 'warn'
+        '@productboard/relay/graphql-syntax': 'error',
+        '@productboard/relay/compat-uses-vars': 'warn',
+        '@productboard/relay/graphql-naming': 'error',
+        '@productboard/relay/generated-flow-types': 'warn',
+        '@productboard/relay/no-future-added-value': 'warn',
+        '@productboard/relay/unused-fields': 'warn',
+        '@productboard/relay/must-colocate-fragment-spreads': 'warn',
+        '@productboard/relay/function-required-argument': 'warn',
+        '@productboard/relay/hook-required-argument': 'warn'
       }
     },
     strict: {
       rules: {
-        '@kbjz/relay/graphql-syntax': 'error',
-        '@kbjz/relay/compat-uses-vars': 'error',
-        '@kbjz/relay/graphql-naming': 'error',
-        '@kbjz/relay/generated-flow-types': 'error',
-        '@kbjz/relay/no-future-added-value': 'error',
-        '@kbjz/relay/unused-fields': 'error',
-        '@kbjz/relay/must-colocate-fragment-spreads': 'error',
-        '@kbjz/relay/function-required-argument': 'error',
-        '@kbjz/relay/hook-required-argument': 'error'
+        '@productboard/relay/graphql-syntax': 'error',
+        '@productboard/relay/compat-uses-vars': 'error',
+        '@productboard/relay/graphql-naming': 'error',
+        '@productboard/relay/generated-flow-types': 'error',
+        '@productboard/relay/no-future-added-value': 'error',
+        '@productboard/relay/unused-fields': 'error',
+        '@productboard/relay/must-colocate-fragment-spreads': 'error',
+        '@productboard/relay/function-required-argument': 'error',
+        '@productboard/relay/hook-required-argument': 'error'
       }
     }
   }
