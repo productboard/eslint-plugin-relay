@@ -1,6 +1,6 @@
-**This plugin is a fork of [eslint-plugin-relay](https://github.com/relayjs/eslint-plugin-relay)**
+**This plugin is a fork of [eslint-plugin-relay](https://github.com/relayjs/eslint-plugin-relay)** with some patches applied on top. This fork isn't distributed in any of the package repositories.
 
-# eslint-plugin-relay [![Build Status](https://travis-ci.org/relayjs/eslint-plugin-relay.svg?branch=master)](https://travis-ci.org/relayjs/eslint-plugin-relay) [![npm version](https://badge.fury.io/js/eslint-plugin-relay.svg)](http://badge.fury.io/js/eslint-plugin-relay)
+# eslint-plugin-relay [![CI](https://github.com/productboard/eslint-plugin-relay/actions/workflows/ci.yml/badge.svg)](https://github.com/productboard/eslint-plugin-relay/actions/workflows/ci.yml) 
 
 `eslint-plugin-relay` is a plugin for [ESLint](http://eslint.org/) to catch common problems in code using [Relay](https://facebook.github.io/relay/) early.
 
