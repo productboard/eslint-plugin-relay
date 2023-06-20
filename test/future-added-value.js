@@ -24,8 +24,9 @@ const FUTURE_ADDED_VALUE_MESSAGE =
 
 ruleTester.run('no-future-added-value', rules['no-future-added-value'], {
   valid: [
-    `const response: 'YES' | 'NO' = 'YES';`,
-    `
+    {code: `const response: 'YES' | 'NO' = 'YES';`},
+    {
+      code: `
       const response: 'YES' | 'NO' = 'YES';
       switch (response) {
         case 'YES':
@@ -36,6 +37,7 @@ ruleTester.run('no-future-added-value', rules['no-future-added-value'], {
           (response: '%future added value');
       }
     `
+    }
   ],
   invalid: [
     {
@@ -92,6 +94,16 @@ ruleTester.run('no-future-added-value', rules['no-future-added-value'], {
       errors: [
         {
           message: FUTURE_ADDED_VALUE_MESSAGE
+        }
+      ]
+    },
+    {
+      // value location
+      code: `const response: 'YES' | 'NO' = '%future added value';`,
+      options: [{message: 'Custom message'}],
+      errors: [
+        {
+          message: 'Custom message'
         }
       ]
     }

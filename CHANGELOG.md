@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.9.3
+
+- allow to pass custom error message to `no-future-added-value` rule
+- update installation instructions and fix README
+
 ## v1.9.2
 
 - fix inability to use `disable-next-line` comments
