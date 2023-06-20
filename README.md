@@ -46,12 +46,12 @@ module.exports = {
 ```
 
 You can also enable all the recommended or strict rules at once.
-Add `plugin:relay/recommended` or `plugin:relay/strict` in `extends`:
+Add `plugin:@productboard/relay/recommended` or `plugin:@productboard/relay/strict` in `extends`:
 
 ```js
 {
   "extends": [
-    "plugin:relay/recommended"
+    "plugin:@productboard/relay/recommended"
   ]
 }
 ```
