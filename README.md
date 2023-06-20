@@ -6,12 +6,24 @@
 
 ## Install
 
-`npm i --save-dev eslint-plugin-relay`
+Point to repository in yout `package.json` file:
+
+```json
+{
+  "dependencies": {
+    "@productboard/eslint-plugin-relay": "productboard/eslint-plugin-relay#vX.X.X"
+  }
+}
+```
+
+Where `X.X.X` should be replaced with tagged version, see [latest tag here](https://github.com/productboard/eslint-plugin-relay/tags).
+
+Run `yarn install` / `npm install`.
 
 ## How To Use
 
-1.  Add `"relay"` to your eslint `plugins` section.
-2.  Add the relay rules such as `"relay/graphql-syntax": "error"` to your eslint `rules` section, see the example for all rules.
+1.  Add `"@productboard/relay"` to your eslint `plugins` section.
+2.  Add the relay rules such as `"@productboard/relay/graphql-syntax": "error"` to your eslint `rules` section, see the example for all rules.
 
 Example .eslintrc.js:
 
@@ -19,17 +31,17 @@ Example .eslintrc.js:
 module.exports = {
   // Other eslint properties here
   rules: {
-    'relay/graphql-syntax': 'error',
-    'relay/compat-uses-vars': 'warn',
-    'relay/graphql-naming': 'error',
-    'relay/generated-flow-types': 'warn',
-    'relay/must-colocate-fragment-spreads': 'warn',
-    'relay/no-future-added-value': 'warn',
-    'relay/unused-fields': 'warn',
-    'relay/function-required-argument': 'warn',
-    'relay/hook-required-argument': 'warn'
+    '@productboard/relay/graphql-syntax': 'error',
+    '@productboard/relay/compat-uses-vars': 'warn',
+    '@productboard/relay/graphql-naming': 'error',
+    '@productboard/relay/generated-flow-types': 'warn',
+    '@productboard/relay/must-colocate-fragment-spreads': 'warn',
+    '@productboard/relay/no-future-added-value': 'warn',
+    '@productboard/relay/unused-fields': 'warn',
+    '@productboard/relay/function-required-argument': 'warn',
+    '@productboard/relay/hook-required-argument': 'warn'
   },
-  plugins: ['relay']
+  plugins: ['@productboard/relay']
 };
 ```
 
@@ -48,8 +60,8 @@ Add `plugin:relay/recommended` or `plugin:relay/strict` in `extends`:
 
 The following rules support suppression within graphql tags:
 
-- relay/unused-fields
-- relay/must-colocate-fragment-spreads
+- `unused-fields`
+- `must-colocate-fragment-spreads`
 
 Supported rules can be suppressed by adding `# eslint-disable-next-line @productboard/relay/name-of-rule` to the preceding line:
 
@@ -61,6 +73,38 @@ graphql`fragment foo on Page {
 ```
 
 Note that only the `eslint-disable-next-line` form of suppression works. `eslint-disable-line` doesn't currently work until graphql-js provides support for [parsing Comment nodes](https://github.com/graphql/graphql-js/issues/2241) in their AST.
+
+#### Rule options
+
+##### `no-future-added-value`
+
+You can specify custom error message:
+
+```js
+  module.exports = {
+      rules: {
+        '@productboard/relay/no-future-added-value': [ 'error', {
+          message: "My custom message"
+        } ],
+      }
+  }
+```
+
+#### `must-colocate-fragment-spreads`
+
+You can allow mark fragment as used when it is imported (defaults to `false`):
+
+```js
+  module.exports = {
+      rules: {
+        '@productboard/relay/must-colocate-fragment-spreads': [
+          'error',
+          { allowNamedImports: true },
+        ],
+      }
+  }
+```
+
 
 ## Contribute
 
