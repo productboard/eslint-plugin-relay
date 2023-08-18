@@ -14,7 +14,7 @@ const RuleTester = eslint.RuleTester;
 
 const ruleTester = new RuleTester({
   parser: require.resolve('babel-eslint'),
-  parserOptions: { ecmaVersion: 6, sourceType: 'module' }
+  parserOptions: {ecmaVersion: 6, sourceType: 'module'}
 });
 
 function unusedFieldsWarning(fragment) {
@@ -47,7 +47,7 @@ ruleTester.run(
           ...component_fragment
         }\`;
         `,
-        options: [{ allowNamedImports: true }]
+        options: [{allowNamedImports: true}]
       },
       `
       const Component = require('../shared/component.js');
@@ -138,7 +138,7 @@ ruleTester.run(
           ...component_fragment
         }\`;
         `,
-        options: [{ allowNamedImports: true }],
+        options: [{allowNamedImports: true}],
         errors: [
           {
             message: unusedFieldsWarning('component_fragment'),
@@ -153,7 +153,7 @@ ruleTester.run(
           ...component_fragment
         }\`;
         `,
-        options: [{ allowNamedImports: false }],
+        options: [{allowNamedImports: false}],
         errors: [
           {
             message: unusedFieldsWarning('component_fragment'),
