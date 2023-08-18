@@ -160,7 +160,8 @@ function checkColocation(context) {
                 `to query for it's own data, and such fragment should be spread in the parent component.` +
                 `The naming convention is <nameOfComponentCamelCase>_<optionalSuffix>. ` +
                 `The <nameOfComponentCamelCase> must match the import name. The optional suffix should be separated ` +
-                `by underscore (usually when you need to pass multiple fragments to the same component).\n`
+                `by underscore (usually when you need to pass multiple fragments to the same component).` +
+                `See: https://pb.dev/docs/default/component/pb-frontend/data-fetching/02-relay-patterns/#fragments\n`
             });
           }
         }
