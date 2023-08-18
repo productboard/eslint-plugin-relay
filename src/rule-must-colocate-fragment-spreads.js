@@ -155,11 +155,11 @@ function checkColocation(context) {
               loc: utils.getLoc(context, node, queriedFragments[fragment]),
               message:
                 `This spreads the fragment \`${fragment}\` but ` +
-                `this module does not use it directly or it the fragment is named incorrectly. If a different module ` +
+                `this module does not use it directly or the fragment is named incorrectly. If a different module ` +
                 `needs the data from this fragment, that module should directly define it's own fragment ` +
                 `to query for it's own data, and such fragment should be spread in the parent component.` +
-                `The naming convention should be <nameOfComponentCamelCase>_<optionalSuffix>. ` +
-                `The <nameOfComponentCamelCase> should match the import name. Optinal suffix should be separated ` +
+                `The naming convention is <nameOfComponentCamelCase>_<optionalSuffix>. ` +
+                `The <nameOfComponentCamelCase> must match the import name. The optional suffix should be separated ` +
                 `by underscore (usually when you need to pass multiple fragments to the same component).\n`
             });
           }
