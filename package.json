@@ -1,7 +1,7 @@
 {
   "name": "@productboard/eslint-plugin-relay",
   "private": true,
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": "ESLint plugin for Relay.",
   "main": "eslint-plugin-relay",
   "repository": "https://github.com/productboard/eslint-plugin-relay",
