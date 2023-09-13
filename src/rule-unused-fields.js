@@ -18,6 +18,8 @@ const ESLINT_DISABLE_COMMENT =
 
 function getGraphQLFieldNames(graphQLAst) {
   const fieldNames = {};
+  const edgesParents = [];
+  let prevField = null;
 
   function walkAST(node, ignoreLevel) {
     if (node.kind === 'Field' && !ignoreLevel) {
@@ -26,6 +28,17 @@ function getGraphQLFieldNames(graphQLAst) {
       }
       const nameNode = node.alias || node.name;
       fieldNames[nameNode.value] = nameNode;
+
+      if (
+        prevField &&
+        prevField.kind === 'Field' &&
+        node.kind === 'Field' &&
+        node.name.value === 'edges'
+      ) {
+        edgesParents.push(prevField.name.value);
+      }
+
+      prevField = node;
     }
     if (node.kind === 'OperationDefinition') {
       if (
@@ -42,6 +55,7 @@ function getGraphQLFieldNames(graphQLAst) {
       });
       return;
     }
+
     for (const prop in node) {
       const value = node[prop];
       if (prop === 'loc') {
@@ -58,7 +72,8 @@ function getGraphQLFieldNames(graphQLAst) {
   }
 
   walkAST(graphQLAst);
-  return fieldNames;
+
+  return {fieldNames, edgesParents};
 }
 
 function isGraphQLTemplate(node) {
@@ -100,7 +115,7 @@ function rule(context) {
   let currentMethod = [];
   let foundMemberAccesses = {};
   let templateLiterals = [];
-  let hasEdgesAndNodesWhiteListFunctionCall = false;
+  const edgesAndNodesWhiteListFunctionCalls = [];
 
   function visitGetByPathCall(node) {
     // The `getByPath` utility accesses nested fields in the form
@@ -133,8 +148,28 @@ function rule(context) {
     }
   }
 
-  function shouldIgnoreWhiteListedCollectConnectionFields(field) {
-    return (field === 'edges' || field === 'node') && hasEdgesAndNodesWhiteListFunctionCall;
+  function getEdgesAndNodesWhiteListFunctionCallArguments(calls) {
+    return calls.flatMap(call => call.arguments.map(arg => arg.property.name));
+  }
+
+  // Naively checks whether the function call for
+  // `edgesAndNodesWhiteListFunctionName` contains arguments
+  // that are property accesses on a field that contains
+  // `edges`
+  function shouldIgnoreWhiteListedCollectConnectionFields(
+    field,
+    edgesParents,
+    callArguments
+  ) {
+    const callArgumentsSet = new Set([...callArguments]);
+    const edgesParentsSet = new Set([...edgesParents]);
+    const intersect = new Set(
+      [...callArgumentsSet].filter(callArgument =>
+        edgesParentsSet.has(callArgument)
+      )
+    );
+
+    return (field === 'edges' || field === 'node') && intersect.size > 0;
   }
 
   return {
@@ -151,7 +186,14 @@ function rule(context) {
           return;
         }
 
-        const queriedFields = getGraphQLFieldNames(graphQLAst);
+        const {fieldNames: queriedFields, edgesParents} =
+          getGraphQLFieldNames(graphQLAst);
+
+        const edgesAndNodesWhiteListFunctionCallArguments =
+          getEdgesAndNodesWhiteListFunctionCallArguments(
+            edgesAndNodesWhiteListFunctionCalls
+          );
+
         for (const field in queriedFields) {
           if (
             !foundMemberAccesses[field] &&
@@ -159,7 +201,11 @@ function rule(context) {
             // Do not warn for unused __typename which can be a workaround
             // when only interested in existence of an object.
             field !== '__typename' &&
-            !shouldIgnoreWhiteListedCollectConnectionFields(field)
+            !shouldIgnoreWhiteListedCollectConnectionFields(
+              field,
+              edgesParents,
+              edgesAndNodesWhiteListFunctionCallArguments
+            )
           ) {
             context.report({
               node: templateLiteral,
@@ -182,7 +228,7 @@ function rule(context) {
       }
       switch (node.callee.name) {
         case edgesAndNodesWhiteListFunctionName:
-          hasEdgesAndNodesWhiteListFunctionCall = true;
+          edgesAndNodesWhiteListFunctionCalls.push(node);
           break;
         case 'getByPath':
           visitGetByPathCall(node);
