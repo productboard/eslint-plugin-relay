@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.4
+
+- rule `unused-fields` has additional functionality which allows you to pass option `edgesAndNodesWhiteListFunctionName`, this is a name of a function and if that function receives an object with `edges` as argument, it will ignore `edges` and `node` warning for unused fields because it considers them to be used inside this function
+
 ## v1.9.3
 
 - allow to pass custom error message to `no-future-added-value` rule
