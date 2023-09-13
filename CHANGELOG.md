@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.9.4
+## v1.9.6
 
 - rule `unused-fields` has additional functionality which allows you to pass option `edgesAndNodesWhiteListFunctionName`, this is a name of a function and if that function receives an object with `edges` as argument, it will ignore `edges` and `node` warning for unused fields because it considers them to be used inside this function
 
