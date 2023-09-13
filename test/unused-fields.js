@@ -90,7 +90,8 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
         name
       }\`;
     `,
-    `
+    {
+      code: `
     graphql\`fragment foo on Page {
       fields {
         edges {
@@ -105,7 +106,9 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     const nodes = collectConnectionNodes(data.fields);
 
     const ids = nodes.map((node) => node.id);
-    `
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
+    }
   ],
   invalid: [
     {
@@ -197,6 +200,35 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
 
     const ids = nodes.map((node) => node.id);
     `,
+      errors: [
+        {
+          message: unusedFieldsWarning('edges'),
+          line: 4
+        },
+        {
+          message: unusedFieldsWarning('node'),
+          line: 5
+        }
+      ]
+    },
+    {
+      code: `
+    graphql\`fragment foo on Page {
+      fields {
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes_TYPO(data.fields);
+
+    const ids = nodes.map((node) => node.id);
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}],
       errors: [
         {
           message: unusedFieldsWarning('edges'),

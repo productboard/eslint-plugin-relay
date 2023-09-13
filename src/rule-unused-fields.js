@@ -94,10 +94,13 @@ function isPageInfoField(field) {
 }
 
 function rule(context) {
+  const edgesAndNodesWhiteListFunctionName = context.options[0]
+    ? context.options[0].edgesAndNodesWhiteListFunctionName
+    : null;
   let currentMethod = [];
   let foundMemberAccesses = {};
   let templateLiterals = [];
-  let hasCollectConnectionNodes = false;
+  let hasEdgesAndNodesWhiteListFunctionCall = false;
 
   function visitGetByPathCall(node) {
     // The `getByPath` utility accesses nested fields in the form
@@ -131,7 +134,7 @@ function rule(context) {
   }
 
   function shouldIgnoreWhiteListedCollectConnectionFields(field) {
-    return (field === 'edges' || field === 'node') && hasCollectConnectionNodes;
+    return (field === 'edges' || field === 'node') && hasEdgesAndNodesWhiteListFunctionCall;
   }
 
   return {
@@ -178,8 +181,8 @@ function rule(context) {
         return;
       }
       switch (node.callee.name) {
-        case 'collectConnectionNodes':
-          hasCollectConnectionNodes = true;
+        case edgesAndNodesWhiteListFunctionName:
+          hasEdgesAndNodesWhiteListFunctionCall = true;
           break;
         case 'getByPath':
           visitGetByPathCall(node);
@@ -215,4 +218,22 @@ function rule(context) {
   };
 }
 
-module.exports = rule;
+module.exports = {
+  meta: {
+    docs: {
+      description: 'Warns about unused fields in graphql queries'
+    },
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          edgesAndNodesWhiteListFunctionName: {
+            type: 'string'
+          }
+        },
+        additionalProperties: false
+      }
+    ]
+  },
+  create: rule
+};
