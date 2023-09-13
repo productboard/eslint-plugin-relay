@@ -89,6 +89,22 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
         # eslint-disable-next-line @productboard/relay/unused-fields
         name
       }\`;
+    `,
+    `
+    graphql\`fragment foo on Page {
+      fields {
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes(data.fields);
+
+    const ids = nodes.map((node) => node.id);
     `
   ],
   invalid: [
@@ -161,6 +177,34 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
         {
           message: unusedFieldsWarning('unused2'),
           line: 4
+        }
+      ]
+    },
+    {
+      code: `
+    graphql\`fragment foo on Page {
+      fields {
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const nodes = filterSomeData(data.fields);
+
+    const ids = nodes.map((node) => node.id);
+    `,
+      errors: [
+        {
+          message: unusedFieldsWarning('edges'),
+          line: 4
+        },
+        {
+          message: unusedFieldsWarning('node'),
+          line: 5
         }
       ]
     }

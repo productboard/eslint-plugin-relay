@@ -97,6 +97,7 @@ function rule(context) {
   let currentMethod = [];
   let foundMemberAccesses = {};
   let templateLiterals = [];
+  let hasCollectConnectionNodes = false;
 
   function visitGetByPathCall(node) {
     // The `getByPath` utility accesses nested fields in the form
@@ -129,6 +130,10 @@ function rule(context) {
     }
   }
 
+  function shouldIgnoreWhiteListedCollectConnectionFields(field) {
+    return (field === 'edges' || field === 'node') && hasCollectConnectionNodes;
+  }
+
   return {
     Program(_node) {
       currentMethod = [];
@@ -150,7 +155,8 @@ function rule(context) {
             !isPageInfoField(field) &&
             // Do not warn for unused __typename which can be a workaround
             // when only interested in existence of an object.
-            field !== '__typename'
+            field !== '__typename' &&
+            !shouldIgnoreWhiteListedCollectConnectionFields(field)
           ) {
             context.report({
               node: templateLiteral,
@@ -172,6 +178,9 @@ function rule(context) {
         return;
       }
       switch (node.callee.name) {
+        case 'collectConnectionNodes':
+          hasCollectConnectionNodes = true;
+          break;
         case 'getByPath':
           visitGetByPathCall(node);
           break;
