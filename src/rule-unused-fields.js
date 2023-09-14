@@ -166,8 +166,7 @@ function rule(context) {
   // `edgesAndNodesWhiteListFunctionName` contains arguments
   // that are property accesses on a field that contains
   // `edges`
-  function shouldIgnoreWhiteListedCollectConnectionFields(
-    field,
+  function wasWhiteListFunctionCalledWithEdgesAndNodesArgument(
     edgesParents,
     callArguments
   ) {
@@ -179,7 +178,17 @@ function rule(context) {
       )
     );
 
-    return (field === 'edges' || field === 'node') && intersect.size > 0;
+    return intersect.size > 0;
+  }
+
+  function shouldIgnoreWhiteListedCollectConnectionFields(
+    field,
+    whiteListFunctionCalledWithEdgesAndNodes
+  ) {
+    return (
+      (field === 'edges' || field === 'node') &&
+      whiteListFunctionCalledWithEdgesAndNodes
+    );
   }
 
   return {
@@ -203,6 +212,12 @@ function rule(context) {
         const {fieldNames: queriedFields, edgesParents} =
           getGraphQLFieldNames(graphQLAst);
 
+        const whiteListFunctionCalledWithEdgesAndNodes =
+          wasWhiteListFunctionCalledWithEdgesAndNodesArgument(
+            edgesParents,
+            edgesAndNodesWhiteListFunctionCallArguments
+          );
+
         for (const field in queriedFields) {
           if (
             !foundMemberAccesses[field] &&
@@ -212,8 +227,7 @@ function rule(context) {
             field !== '__typename' &&
             !shouldIgnoreWhiteListedCollectConnectionFields(
               field,
-              edgesParents,
-              edgesAndNodesWhiteListFunctionCallArguments
+              whiteListFunctionCalledWithEdgesAndNodes
             )
           ) {
             context.report({
