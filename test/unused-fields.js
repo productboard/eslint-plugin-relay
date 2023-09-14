@@ -185,6 +185,28 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     },
     {
       code: `
+    graphql\`fragment foo on Page {
+      fields {
+        __id
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const { fields } = data;
+    const nodes = collectConnectionNodes(fields);
+    const firstNode = nodes[0].id;
+
+    const connectionId = fields.__id;
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
+    },
+    {
+      code: `
     graphql\`query fields($id: ID!) {
       node(id: $id) {
         fields {
