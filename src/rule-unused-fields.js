@@ -149,7 +149,14 @@ function rule(context) {
 
   function getEdgesAndNodesWhiteListFunctionCallArguments(calls) {
     return calls.flatMap(call =>
-      call.arguments.map(arg => (arg.property ? arg.property.name : null))
+      call.arguments.map(arg => {
+        if ('expression' in arg) {
+          return arg.expression.property.name;
+        } else if ('property' in arg) {
+          return arg.property.name;
+        }
+        return null;
+      })
     );
   }
 

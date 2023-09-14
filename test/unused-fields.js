@@ -156,8 +156,52 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     }\`;
 
     const nodes = collectConnectionNodes(data.fields);
+    const firstNode = nodes[0].id;
 
-    const ids = nodes.map((node) => node.id);
+    const connectionId = data.fields.__id;
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
+    },
+    {
+      code: `
+    graphql\`fragment foo on Page {
+      fields {
+        __id
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes(data?.fields);
+    const firstNode = nodes[0].id;
+
+    const connectionId = data.fields.__id;
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
+    },
+    {
+      code: `
+    graphql\`query fields($id: ID!) {
+      node(id: $id) {
+        fields {
+          __id
+          edges {
+            node {
+              __typename
+              id
+            }
+          }
+        }
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes(data.node.fields);
+    const firstNode = nodes[0].id;
+
     const connectionId = data.fields.__id;
     `,
       options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
@@ -307,6 +351,28 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     `,
       options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}],
       errors: [
+        {
+          message: unusedFieldsWarning('name'),
+          line: 4
+        }
+      ]
+    },
+    {
+      code: `
+    graphql\`fragment foo on Page {
+      fields {
+        name
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes(data.unrelatedData);
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}],
+      errors: [
+        {
+          message: unusedFieldsWarning('fields'),
+          line: 3
+        },
         {
           message: unusedFieldsWarning('name'),
           line: 4
