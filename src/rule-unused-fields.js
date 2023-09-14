@@ -19,7 +19,6 @@ const ESLINT_DISABLE_COMMENT =
 function getGraphQLFieldNames(graphQLAst) {
   const fieldNames = {};
   const edgesParents = [];
-  let prevField = null;
 
   function walkAST(node, ignoreLevel) {
     if (node.kind === 'Field' && !ignoreLevel) {
@@ -29,16 +28,9 @@ function getGraphQLFieldNames(graphQLAst) {
       const nameNode = node.alias || node.name;
       fieldNames[nameNode.value] = nameNode;
 
-      if (
-        prevField &&
-        prevField.kind === 'Field' &&
-        node.kind === 'Field' &&
-        node.name.value === 'edges'
-      ) {
-        edgesParents.push(prevField.name.value);
+      if (node.kind === 'Field' && node.selectionSet && containsEdges(node)) {
+        edgesParents.push(node.name.value);
       }
-
-      prevField = node;
     }
     if (node.kind === 'OperationDefinition') {
       if (
@@ -108,6 +100,13 @@ function isPageInfoField(field) {
   }
 }
 
+function containsEdges(node) {
+  return node.selectionSet.selections.some(
+    selection =>
+      selection.name && selection.name.value && selection.name.value === 'edges'
+  );
+}
+
 function rule(context) {
   const edgesAndNodesWhiteListFunctionName = context.options[0]
     ? context.options[0].edgesAndNodesWhiteListFunctionName
@@ -149,7 +148,9 @@ function rule(context) {
   }
 
   function getEdgesAndNodesWhiteListFunctionCallArguments(calls) {
-    return calls.flatMap(call => call.arguments.map(arg => arg.property.name));
+    return calls.flatMap(call =>
+      call.arguments.map(arg => (arg.property ? arg.property.name : null))
+    );
   }
 
   // Naively checks whether the function call for
@@ -179,6 +180,10 @@ function rule(context) {
       templateLiterals = [];
     },
     'Program:exit'(_node) {
+      const edgesAndNodesWhiteListFunctionCallArguments =
+        getEdgesAndNodesWhiteListFunctionCallArguments(
+          edgesAndNodesWhiteListFunctionCalls
+        );
       templateLiterals.forEach(templateLiteral => {
         const graphQLAst = getGraphQLAST(templateLiteral);
         if (!graphQLAst) {
@@ -188,11 +193,6 @@ function rule(context) {
 
         const {fieldNames: queriedFields, edgesParents} =
           getGraphQLFieldNames(graphQLAst);
-
-        const edgesAndNodesWhiteListFunctionCallArguments =
-          getEdgesAndNodesWhiteListFunctionCallArguments(
-            edgesAndNodesWhiteListFunctionCalls
-          );
 
         for (const field in queriedFields) {
           if (

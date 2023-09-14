@@ -140,6 +140,27 @@ ruleTester.run('unused-fields', rules['unused-fields'], {
     const otherIds = otherNodes.map((node) => node.id);
     `,
       options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
+    },
+    {
+      code: `
+    graphql\`fragment foo on Page {
+      fields {
+        __id
+        edges {
+          node {
+            __typename
+            id
+          }
+        }
+      }
+    }\`;
+
+    const nodes = collectConnectionNodes(data.fields);
+
+    const ids = nodes.map((node) => node.id);
+    const connectionId = data.fields.__id;
+    `,
+      options: [{edgesAndNodesWhiteListFunctionName: 'collectConnectionNodes'}]
     }
   ],
   invalid: [
