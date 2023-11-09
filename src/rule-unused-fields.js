@@ -197,7 +197,7 @@ function rule(context) {
       foundMemberAccesses = {};
       templateLiterals = [];
     },
-    'Program:exit'(_node) {
+    'Program:exit'(node) {
       const edgesAndNodesWhiteListFunctionCallArguments =
         getEdgesAndNodesWhiteListFunctionCallArguments(
           edgesAndNodesWhiteListFunctionCalls
@@ -231,7 +231,7 @@ function rule(context) {
             )
           ) {
             context.report({
-              node: templateLiteral,
+              node,
               loc: getLoc(context, templateLiteral, queriedFields[field]),
               message:
                 `This queries for the field \`${field}\` but this file does ` +
