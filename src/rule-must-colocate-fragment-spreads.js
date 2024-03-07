@@ -103,10 +103,6 @@ function getGraphQLFragmentSpreads(graphQLAst) {
   return fragmentSpreads;
 }
 
-function isFirstLetterUppercase(word) {
-  return /^\p{Lu}/u.test(word);
-}
-
 function getGraphQLFragmentDefinitionName(graphQLAst) {
   let name = null;
   visit(graphQLAst, {
@@ -171,11 +167,7 @@ function checkColocation(context) {
     ImportDeclaration(node) {
       if (node.importKind === 'value') {
         node.specifiers.forEach(specifier => {
-          if (
-            allowNamedImports &&
-            specifier.imported &&
-            isFirstLetterUppercase(specifier.imported.name)
-          ) {
+          if (allowNamedImports && specifier.imported) {
             foundImportedModules.push({
               type: 'namedImport',
               value: specifier.imported.name
