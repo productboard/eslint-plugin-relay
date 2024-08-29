@@ -50,6 +50,16 @@ ruleTester.run(
         `,
         options: [{allowNamedImports: true}]
       },
+      {
+        code: `
+          import { useHook } from '@some/module';
+          
+          graphql\`fragment foo on Page {
+            ...useHook
+          }\`;
+          `,
+        options: [{allowNamedImports: true}]
+      },
       `
       const Component = require('../shared/component.js');
       graphql\`fragment foo on Page {
